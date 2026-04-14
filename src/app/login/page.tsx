@@ -4,6 +4,7 @@ import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import { Shield, Loader2 } from "lucide-react";
+import Image from "next/image";
 import { toast } from "react-hot-toast";
 
 export default function LoginPage() {
@@ -38,8 +39,14 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center p-4 bg-slate-950">
       <div className="card w-full max-w-md space-y-8">
         <div className="text-center">
-          <div className="mx-auto w-16 h-16 bg-primary/20 rounded-2xl flex items-center justify-center border border-primary/30 mb-4">
-            <Shield className="text-primary w-10 h-10" />
+          <div className="mx-auto w-48 h-24 relative mb-4">
+            <Image 
+              src="/logo.png" 
+              alt="TSCOPE Logo" 
+              fill 
+              className="object-contain"
+              priority
+            />
           </div>
           <h1 className="text-3xl font-bold text-white">GeraContratos AI</h1>
           <p className="text-slate-400 mt-2">Acesse sua conta para gerenciar seus contratos</p>

@@ -11,6 +11,7 @@ import {
   Settings,
   Shield
 } from "lucide-react";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/client";
 
@@ -33,13 +34,16 @@ export function Sidebar() {
 
   return (
     <div className="flex flex-col h-screen w-64 bg-slate-900 border-r border-slate-800 fixed left-0 top-0 z-40">
-      <div className="p-6 flex items-center gap-3">
-        <div className="w-10 h-10 bg-primary/20 rounded-xl flex items-center justify-center border border-primary/30">
-          <Shield className="text-primary w-6 h-6" />
+      <div className="p-6 flex items-center justify-center">
+        <div className="relative w-40 h-16">
+          <Image 
+            src="/logo.png" 
+            alt="TSCOPE Logo" 
+            fill 
+            className="object-contain"
+            priority
+          />
         </div>
-        <h1 className="text-xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-          GeraContratos
-        </h1>
       </div>
 
       <nav className="flex-1 px-4 py-4 space-y-1">
