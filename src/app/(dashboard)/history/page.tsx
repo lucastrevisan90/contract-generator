@@ -1,14 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { supabase } from "@/lib/supabase/client";
+import { createClient } from "@/lib/supabase/client";
 import { 
   History as HistoryIcon, 
   Download, 
   Search, 
   Calendar, 
   User, 
-  DollarSign,
   FileText,
   Loader2
 } from "lucide-react";
@@ -26,6 +25,7 @@ interface Contract {
 export default function HistoryPage() {
   const [contracts, setContracts] = useState<Contract[]>([]);
   const [loading, setLoading] = useState(true);
+  const supabase = createClient();
 
   useEffect(() => {
     fetchHistory();
@@ -57,17 +57,6 @@ export default function HistoryPage() {
         <p className="text-slate-400">Consulte e baixe todos os documentos já gerados pelo sistema</p>
       </div>
 
-      <div className="flex gap-4 mb-6">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 w-5 h-5" />
-          <input
-            type="text"
-            placeholder="Buscar por contratado ou modelo..."
-            className="w-full bg-slate-900 border border-slate-800 rounded-lg pl-10 pr-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-primary/50"
-          />
-        </div>
-      </div>
-
       {loading ? (
         <div className="flex justify-center py-20">
           <Loader2 className="w-10 h-10 animate-spin text-primary" />
@@ -75,8 +64,7 @@ export default function HistoryPage() {
       ) : contracts.length === 0 ? (
         <div className="card text-center py-20">
           <HistoryIcon className="w-16 h-16 text-slate-700 mx-auto mb-4" />
-          <h3 className="text-xl font-medium">Histórico vazio</h3>
-          <p className="text-slate-500 mt-2">Você ainda não gerou nenhum contrato.</p>
+          <h3 className="text-xl font-medium text-white">Histórico vazio</h3>
         </div>
       ) : (
         <div className="card overflow-hidden !p-0">
@@ -106,8 +94,8 @@ export default function HistoryPage() {
                       </div>
                     </div>
                   </td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-2 text-slate-300">
+                  <td className="px-6 py-4 text-slate-300">
+                    <div className="flex items-center gap-2">
                       <User className="w-4 h-4 text-slate-500" />
                       {contract.contractor_name}
                     </div>

@@ -1,12 +1,14 @@
 "use server";
 
-import { supabase } from "@/lib/supabase/client";
+import { createClient } from "@/lib/supabase/server";
 import { extractContractData } from "@/lib/ai/gemini";
 import Docxtemplater from "docxtemplater";
 import PizZip from "pizzip";
 
 export async function generateContractAction(templateId: string, prompt: string) {
   try {
+    const supabase = await createClient();
+
     // 1. Get Template info
     const { data: template, error: tError } = await supabase
       .from("templates")
@@ -38,10 +40,9 @@ export async function generateContractAction(templateId: string, prompt: string)
     const doc = new Docxtemplater(zip, {
       paragraphLoop: true,
       linebreaks: true,
-      delimiters: { start: "{", end: "}" } // Matching the user's format {variable}
+      delimiters: { start: "{", end: "}" }
     });
 
-    // Merge extracted data with fixed contractor data
     const mergeData = {
       ...extractedData,
       contratante_nome: settings?.name || "NOME DO CONTRATANTE",

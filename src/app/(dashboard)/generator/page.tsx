@@ -1,15 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { supabase } from "@/lib/supabase/client";
+import { createClient } from "@/lib/supabase/client";
 import { generateContractAction } from "@/app/actions/generate";
 import { 
   Sparkles, 
   FileCheck, 
   Download, 
-  Loader2,
-  ChevronRight,
-  Send
+  Loader2
 } from "lucide-react";
 import { toast } from "react-hot-toast";
 
@@ -24,6 +22,7 @@ export default function GeneratorPage() {
   const [prompt, setPrompt] = useState("");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<{ url: string } | null>(null);
+  const supabase = createClient();
 
   useEffect(() => {
     const fetchTemplates = async () => {
@@ -67,7 +66,7 @@ export default function GeneratorPage() {
             <select
               value={selectedTemplate}
               onChange={(e) => setSelectedTemplate(e.target.value)}
-              className="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
+              className="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all font-sans"
             >
               <option value="">Selecione um arquivo...</option>
               {templates.map((t) => (
@@ -83,7 +82,7 @@ export default function GeneratorPage() {
             <textarea
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
-              placeholder="Ex: Contrata o Lucas Silva para desenvolvimento de software, valor total de 10 mil reais pago em 2 parcelas. O anexo 1 deve conter a lista de funcionalidades do app mobile."
+              placeholder="Ex: Contrata o Lucas Silva para desenvolvimento de software, valor total de 10 mil reais pago em 2 parcelas."
               className="w-full h-48 bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all resize-none"
             />
             
@@ -115,9 +114,6 @@ export default function GeneratorPage() {
                   <FileCheck className="text-slate-600 w-8 h-8" />
                 </div>
                 <h3 className="text-lg font-medium text-slate-400">Aguardando geração</h3>
-                <p className="text-slate-500 text-sm mt-2">
-                  Preencha os dados ao lado para ver o resultado aqui.
-                </p>
               </>
             ) : loading ? (
               <>
@@ -126,9 +122,6 @@ export default function GeneratorPage() {
                   <Sparkles className="absolute inset-0 m-auto text-primary w-8 h-8" />
                 </div>
                 <h3 className="text-lg font-medium text-white mt-6">Processando...</h3>
-                <p className="text-slate-500 text-sm mt-2">
-                  Extraindo variáveis e gerando documento Word.
-                </p>
               </>
             ) : (
               <div className="animate-in fade-in zoom-in duration-500">
@@ -136,13 +129,10 @@ export default function GeneratorPage() {
                   <FileCheck className="text-green-500 w-10 h-10" />
                 </div>
                 <h3 className="text-xl font-bold text-white mb-2">Sucesso!</h3>
-                <p className="text-slate-400 text-sm mb-8">
-                  O contrato foi gerado e preenchido corretamente.
-                </p>
                 <a
                   href={result?.url}
                   download
-                  className="btn-primary w-full flex items-center justify-center gap-2 py-3"
+                  className="btn-primary w-full flex items-center justify-center gap-2 py-3 mt-4"
                 >
                   <Download className="w-5 h-5" />
                   Baixar Arquivo

@@ -1,14 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { supabase } from "@/lib/supabase/client";
+import { createClient } from "@/lib/supabase/client";
 import { 
   Plus, 
   FileText, 
   Trash2, 
   Upload, 
-  Loader2,
-  AlertCircle
+  Loader2
 } from "lucide-react";
 import { toast } from "react-hot-toast";
 import PizZip from "pizzip";
@@ -28,6 +27,7 @@ export default function TemplatesPage() {
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(false);
+  const supabase = createClient();
 
   useEffect(() => {
     fetchTemplates();
@@ -56,8 +56,6 @@ export default function TemplatesPage() {
           const content = e.target?.result as ArrayBuffer;
           const zip = new PizZip(content);
           const xml = zip.files["word/document.xml"].asText();
-          
-          // Regex to find {variable}
           const matches = xml.match(/\{[^{}]+\}/g) || [];
           const uniquePlaceholders = Array.from(new Set(matches.map(m => m.replace(/[{}]/g, ""))));
           resolve(uniquePlaceholders);
@@ -75,10 +73,7 @@ export default function TemplatesPage() {
 
     setUploading(true);
     try {
-      // 1. Detect placeholders
       const placeholders = await detectPlaceholders(file);
-      
-      // 2. Upload to Storage
       const fileName = `${Date.now()}_${file.name}`;
       const { data: storageData, error: storageError } = await supabase.storage
         .from("templates")
@@ -86,12 +81,10 @@ export default function TemplatesPage() {
 
       if (storageError) throw storageError;
 
-      // 3. Save to DB
       const { error: dbError } = await supabase.from("templates").insert({
         name: file.name.replace(".docx", ""),
         file_path: storageData.path,
         placeholders,
-        // For simplicity, using first category if exists
         category_id: null 
       });
 
@@ -171,10 +164,6 @@ export default function TemplatesPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
           <div className="card w-full max-w-lg">
             <h2 className="text-2xl font-bold mb-4">Upload de Novo Modelo</h2>
-            <p className="text-slate-400 mb-6">
-              Envie um arquivo <span className="text-white font-mono">.docx</span> contendo variáveis no formato <span className="text-primary font-mono">{`{nome}`}</span>.
-            </p>
-
             <label className="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-slate-700 rounded-xl hover:border-primary hover:bg-primary/5 transition-all cursor-pointer">
               {uploading ? (
                 <div className="text-center">
@@ -196,7 +185,6 @@ export default function TemplatesPage() {
                 disabled={uploading}
               />
             </label>
-
             <div className="flex gap-3 mt-8">
               <button 
                 onClick={() => setShowUploadModal(false)}

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { supabase } from "@/lib/supabase/client";
+import { createClient } from "@/lib/supabase/client";
 import { 
   Building2, 
   MapPin, 
@@ -22,6 +22,7 @@ export default function SettingsPage() {
     address: "",
     phone: "",
   });
+  const supabase = createClient();
 
   useEffect(() => {
     fetchSettings();
@@ -146,7 +147,7 @@ export default function SettingsPage() {
             <textarea
               value={settings.address}
               onChange={(e) => setSettings({ ...settings, address: e.target.value })}
-              className="w-full h-24 bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none"
+              className="w-full h-24 bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none font-sans"
               placeholder="Rua, Número, Bairro, Cidade - Estado, CEP"
               required
             />
@@ -159,11 +160,7 @@ export default function SettingsPage() {
             disabled={saving}
             className="btn-primary px-8 flex items-center gap-2"
           >
-            {saving ? (
-              <Loader2 className="w-5 h-5 animate-spin" />
-            ) : (
-              <Save className="w-5 h-5" />
-            )}
+            {saving ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
             Salvar Alterações
           </button>
         </div>
@@ -174,8 +171,7 @@ export default function SettingsPage() {
         <p className="text-sm text-slate-400">
           <span className="text-white font-medium">Nota:</span> Use os placeholders 
           <code className="text-primary px-1">{"{contratante_nome}"}</code>, 
-          <code className="text-primary px-1">{"{contratante_doc}"}</code>, etc., 
-          em seus documentos para que estes campos sejam preenchidos automaticamente.
+          <code className="text-primary px-1">{"{contratante_doc}"}</code> em seus documentos.
         </p>
       </div>
     </div>

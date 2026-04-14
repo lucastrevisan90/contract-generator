@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { 
   FileText, 
   LayoutDashboard, 
@@ -12,6 +12,7 @@ import {
   ShieldText
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { createClient } from "@/lib/supabase/client";
 
 const menuItems = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
@@ -22,6 +23,13 @@ const menuItems = [
 
 export function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
+  const supabase = createClient();
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    router.push("/login");
+  };
 
   return (
     <div className="flex flex-col h-screen w-64 bg-slate-900 border-r border-slate-800 fixed left-0 top-0 z-40">
@@ -64,8 +72,8 @@ export function Sidebar() {
           <span>Configurações</span>
         </Link>
         <button
-          className="sidebar-item w-full text-left text-red-400 hover:text-red-300 hover:bg-red-500/5"
-          onClick={() => {/* TODO: SignOut */}}
+          className="sidebar-item w-full text-left text-red-400 hover:text-red-300 hover:bg-red-500/5 transition-all"
+          onClick={handleSignOut}
         >
           <LogOut className="w-5 h-5" />
           <span>Sair</span>
