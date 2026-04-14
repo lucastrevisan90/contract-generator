@@ -1,33 +1,38 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-:root {
-  --background: #020617; /* Slate 950 */
-  --foreground: #f8fafc; /* Slate 50 */
-  --primary: #06b6d4; /* Cyan 500 */
-  --primary-foreground: #020617;
-  --secondary: #14b8a6; /* Teal 500 */
-  --secondary-foreground: #ffffff;
-  --accent: #0891b2; /* Cyan 600 */
-  --accent-foreground: #ffffff;
-  --card: #0f172a; /* Slate 900 */
-  --border: #1e293b; /* Slate 800 */
+@theme {
+  --color-background-base: #020617; /* Slate 950 */
+  --color-foreground-base: #f8fafc; /* Slate 50 */
+  --color-primary: #06b6d4; /* Cyan 500 */
+  --color-primary-foreground: #020617;
+  --color-secondary: #14b8a6; /* Teal 500 */
+  --color-secondary-foreground: #ffffff;
+  --color-accent: #0891b2; /* Cyan 600 */
+  --color-accent-foreground: #ffffff;
+  --color-card-bg: #0f172a; /* Slate 900 */
+  --color-border-base: #1e293b; /* Slate 800 */
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: 'Inter', sans-serif;
+@layer base {
+  :root {
+    --background: var(--color-background-base);
+    --foreground: var(--color-foreground-base);
+  }
+  
+  body {
+    color: var(--foreground);
+    background: var(--background);
+    font-family: 'Inter', sans-serif;
+  }
 }
 
 @layer components {
   .btn-primary {
-    @apply px-4 py-2 bg-primary text-primary-foreground font-semibold rounded-lg shadow-lg hover:bg-accent transition-all duration-300 active:scale-95;
+    @apply px-4 py-2 bg-[var(--color-primary)] text-[var(--color-primary-foreground)] font-semibold rounded-lg shadow-lg hover:bg-[var(--color-accent)] transition-all duration-300 active:scale-95;
   }
   
   .btn-secondary {
-    @apply px-4 py-2 bg-transparent border border-primary text-primary font-semibold rounded-lg hover:bg-primary/10 transition-all duration-300;
+    @apply px-4 py-2 bg-transparent border border-[var(--color-primary)] text-[var(--color-primary)] font-semibold rounded-lg hover:bg-[var(--color-primary)]/10 transition-all duration-300;
   }
 
   .card {
@@ -35,10 +40,10 @@ body {
   }
 
   .sidebar-item {
-    @apply flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-primary hover:bg-primary/5 rounded-lg transition-all active:scale-95;
+    @apply flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-[var(--color-primary)] hover:bg-[var(--color-primary)]/5 rounded-lg transition-all active:scale-95;
   }
 
   .sidebar-item-active {
-    @apply flex items-center gap-3 px-4 py-3 text-primary bg-primary/10 rounded-lg transition-all font-medium;
+    @apply flex items-center gap-3 px-4 py-3 text-[var(--color-primary)] bg-[var(--color-primary)]/10 rounded-lg transition-all font-medium;
   }
 }
