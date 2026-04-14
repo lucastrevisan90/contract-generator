@@ -18,10 +18,10 @@ export async function generateContractAction(templateId: string, prompt: string)
       .from("templates")
       .select("*")
       .eq("id", templateId)
-      .eq("user_id", user.id) // Ensure security
+      .eq("user_id", user.id) // Security
       .single();
 
-    if (tError || !template) throw new Error("Template não encontrado");
+    if (tError || !template) throw new Error("Template não encontrado ou sem permissão");
 
     // 2. Extract data via AI
     const extractedData = await extractContractData(prompt, template.placeholders);
@@ -30,6 +30,7 @@ export async function generateContractAction(templateId: string, prompt: string)
     const { data: settings } = await supabase
       .from("contractor_settings")
       .select("*")
+      .eq("user_id", user.id)
       .single();
 
     // 4. Download template from Storage
@@ -65,7 +66,7 @@ export async function generateContractAction(templateId: string, prompt: string)
     });
 
     // 6. Upload generated contract to Storage
-    const outFileName = `generated/${Date.now()}_contrato.docx`;
+    const outFileName = `generated/${user.id}/${Date.now()}_contrato.docx`;
     const { data: uploadData, error: uError } = await supabase.storage
       .from("contracts")
       .upload(outFileName, buffer, {
@@ -77,7 +78,7 @@ export async function generateContractAction(templateId: string, prompt: string)
     // 7. Save to History
     const { data: contract, error: hError } = await supabase.from("contracts").insert({
       template_id: templateId,
-      user_id: user.id, // Fixed: passing user_id
+      user_id: user.id,
       contractor_name: extractedData.contratado || "N/A",
       contract_value: extractedData.valor || "N/A",
       file_path: uploadData.path,

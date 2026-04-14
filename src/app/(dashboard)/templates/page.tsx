@@ -41,7 +41,7 @@ export default function TemplatesPage() {
     const { data, error } = await supabase
       .from("templates")
       .select("*, categories(name)")
-      .eq("user_id", user.id) // Only see yours
+      .eq("user_id", user.id)
       .order("created_at", { ascending: false });
 
     if (error) {
@@ -92,7 +92,7 @@ export default function TemplatesPage() {
         name: file.name.replace(".docx", ""),
         file_path: storageData.path,
         placeholders,
-        user_id: user.id, // Fixed: passing user_id
+        user_id: user.id,
         category_id: null 
       });
 

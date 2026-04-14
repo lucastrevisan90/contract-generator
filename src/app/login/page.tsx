@@ -4,7 +4,6 @@ import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import { Shield, Loader2 } from "lucide-react";
-import Image from "next/image";
 import { toast } from "react-hot-toast";
 
 export default function LoginPage() {
