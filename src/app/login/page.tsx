@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
-import { ShieldText, Loader2 } from "lucide-react";
+import { Shield, Loader2 } from "lucide-react";
 import { toast } from "react-hot-toast";
 
 export default function LoginPage() {
@@ -39,7 +39,7 @@ export default function LoginPage() {
       <div className="card w-full max-w-md space-y-8">
         <div className="text-center">
           <div className="mx-auto w-16 h-16 bg-primary/20 rounded-2xl flex items-center justify-center border border-primary/30 mb-4">
-            <ShieldText className="text-primary w-10 h-10" />
+            <Shield className="text-primary w-10 h-10" />
           </div>
           <h1 className="text-3xl font-bold text-white">GeraContratos AI</h1>
           <p className="text-slate-400 mt-2">Acesse sua conta para gerenciar seus contratos</p>

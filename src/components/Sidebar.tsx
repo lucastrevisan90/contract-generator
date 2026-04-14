@@ -9,7 +9,7 @@ import {
   PlusCircle, 
   LogOut,
   Settings,
-  ShieldText
+  Shield
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/client";
@@ -35,7 +35,7 @@ export function Sidebar() {
     <div className="flex flex-col h-screen w-64 bg-slate-900 border-r border-slate-800 fixed left-0 top-0 z-40">
       <div className="p-6 flex items-center gap-3">
         <div className="w-10 h-10 bg-primary/20 rounded-xl flex items-center justify-center border border-primary/30">
-          <ShieldText className="text-primary w-6 h-6" />
+          <Shield className="text-primary w-6 h-6" />
         </div>
         <h1 className="text-xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
           GeraContratos
