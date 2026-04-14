@@ -64,7 +64,7 @@ export default function SettingsPage() {
           user_id: user.id,
           ...settings,
           updated_at: new Date().toISOString()
-        });
+        }, { onConflict: "user_id" });
 
       if (error) throw error;
       toast.success("Configurações salvas com sucesso!");
