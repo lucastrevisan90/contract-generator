@@ -35,9 +35,13 @@ export default function TemplatesPage() {
 
   const fetchTemplates = async () => {
     setLoading(true);
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return setLoading(false);
+
     const { data, error } = await supabase
       .from("templates")
       .select("*, categories(name)")
+      .eq("user_id", user.id) // Only see yours
       .order("created_at", { ascending: false });
 
     if (error) {
@@ -73,6 +77,9 @@ export default function TemplatesPage() {
 
     setUploading(true);
     try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("Usuário não autenticado");
+
       const placeholders = await detectPlaceholders(file);
       const fileName = `${Date.now()}_${file.name}`;
       const { data: storageData, error: storageError } = await supabase.storage
@@ -85,6 +92,7 @@ export default function TemplatesPage() {
         name: file.name.replace(".docx", ""),
         file_path: storageData.path,
         placeholders,
+        user_id: user.id, // Fixed: passing user_id
         category_id: null 
       });
 

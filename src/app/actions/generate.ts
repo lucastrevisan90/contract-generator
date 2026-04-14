@@ -9,11 +9,16 @@ export async function generateContractAction(templateId: string, prompt: string)
   try {
     const supabase = await createClient();
 
+    // 0. Get User ID
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error("Usuário não autenticado");
+
     // 1. Get Template info
     const { data: template, error: tError } = await supabase
       .from("templates")
       .select("*")
       .eq("id", templateId)
+      .eq("user_id", user.id) // Ensure security
       .single();
 
     if (tError || !template) throw new Error("Template não encontrado");
@@ -72,6 +77,7 @@ export async function generateContractAction(templateId: string, prompt: string)
     // 7. Save to History
     const { data: contract, error: hError } = await supabase.from("contracts").insert({
       template_id: templateId,
+      user_id: user.id, // Fixed: passing user_id
       contractor_name: extractedData.contratado || "N/A",
       contract_value: extractedData.valor || "N/A",
       file_path: uploadData.path,
