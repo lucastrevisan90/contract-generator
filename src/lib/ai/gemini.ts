@@ -1,7 +1,7 @@
 /**
- * Solução Definitiva: Utilizando a API REST nativa do Google Gemini via fetch.
- * Isso elimina problemas de versão de SDK, erros de importação (como o createClient faltando)
- * e incompatibilidades com o Turbopack/Vercel.
+ * Solução Definitiva e Universal: 
+ * Removemos a configuração de 'response_mime_type' que estava variando entre as versões da API
+ * e agora usamos extração manual de JSON, que funciona em TODOS os modelos e versões (v1 e v1beta).
  */
 export async function extractContractData(prompt: string, placeholders: string[]) {
   const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY;
@@ -9,7 +9,7 @@ export async function extractContractData(prompt: string, placeholders: string[]
     throw new Error("A chave GOOGLE_GENERATIVE_AI_API_KEY não foi configurada nas variáveis de ambiente.");
   }
 
-  // Utilizamos a versão estável 'v1' e o modelo estável 'gemini-1.5-flash'
+  // Utilizamos a versão estável 'v1'
   const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
 
   const systemPrompt = `
@@ -40,10 +40,8 @@ export async function extractContractData(prompt: string, placeholders: string[]
               { text: prompt }
             ]
           }
-        ],
-        generation_config: {
-          response_mime_type: "application/json"
-        }
+        ]
+        // Removemos o generation_config para compatibilidade máxima
       })
     });
 
@@ -54,14 +52,20 @@ export async function extractContractData(prompt: string, placeholders: string[]
     }
 
     const data = await response.json();
-    const resultText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+    let resultText = data.candidates?.[0]?.content?.parts?.[0]?.text;
 
     if (!resultText) {
       throw new Error("A IA não retornou um conteúdo válido.");
     }
 
-    // Parseando o JSON extraído
-    return JSON.parse(resultText);
+    // Limpeza robusta para extrair JSON mesmo que a IA inclua blocos de código markdown
+    try {
+      const cleaned = resultText.replace(/```json|```/g, "").trim();
+      return JSON.parse(cleaned);
+    } catch (e) {
+      console.error("Erro ao parsear JSON da IA:", resultText);
+      throw new Error("A IA retornou um formato de dados inválido. Tente novamente.");
+    }
   } catch (error: any) {
     console.error("AI Service Error:", error);
     throw new Error(`Falha no Processamento IA: ${error.message}`);
