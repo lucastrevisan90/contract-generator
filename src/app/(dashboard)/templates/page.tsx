@@ -81,7 +81,16 @@ export default function TemplatesPage() {
       if (!user) throw new Error("Usuário não autenticado");
 
       const placeholders = await detectPlaceholders(file);
-      const fileName = `${Date.now()}_${file.name}`;
+      
+      // Sanitização do nome do arquivo (remove acentos, espaços e caracteres especiais)
+      const sanitizedName = file.name
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/\s+/g, "_")
+        .replace(/[^a-zA-Z0-9._-]/g, "");
+      
+      const fileName = `${Date.now()}_${sanitizedName}`;
+      
       const { data: storageData, error: storageError } = await supabase.storage
         .from("templates")
         .upload(fileName, file);
