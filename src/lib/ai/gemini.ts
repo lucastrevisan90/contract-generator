@@ -1,7 +1,7 @@
 /**
- * Solução Definitiva e Universal: 
- * Removemos a configuração de 'response_mime_type' que estava variando entre as versões da API
- * e agora usamos extração manual de JSON, que funciona em TODOS os modelos e versões (v1 e v1beta).
+ * Solução Definitiva e Universal (v2026): 
+ * Utilizamos o modelo 'gemini-2.5-flash-lite', que é o cavalo de batalha do PLANO GRATUITO.
+ * Ele possui cotas generosas e suporta perfeitamente a extração de JSON.
  */
 export async function extractContractData(prompt: string, placeholders: string[]) {
   const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY;
@@ -9,8 +9,8 @@ export async function extractContractData(prompt: string, placeholders: string[]
     throw new Error("A chave GOOGLE_GENERATIVE_AI_API_KEY não foi configurada nas variáveis de ambiente.");
   }
 
-  // Utilizamos o modelo estável mais recente para 2026: gemini-2.0-flash
-  const url = `https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+  // Utilizamos v1beta para garantir acesso aos modelos Flash-Lite mais recentes do plano gratuito.
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${apiKey}`;
 
   const systemPrompt = `
     Você é um assistente jurídico especializado em extração de dados de contratos.
@@ -41,14 +41,13 @@ export async function extractContractData(prompt: string, placeholders: string[]
             ]
           }
         ]
-        // Removemos o generation_config para compatibilidade máxima
       })
     });
 
     if (!response.ok) {
       const errorData = await response.json();
       console.error("AI REST Error Response:", errorData);
-      throw new Error(`Erro na API Gemini (${response.status}): ${errorData.error?.message || "Erro desconhecido"}`);
+      throw new Error(`Erro na API Gemini (${response.status}): ${errorData.error?.message || "Erro de cota ou conexão"}`);
     }
 
     const data = await response.json();
@@ -58,13 +57,13 @@ export async function extractContractData(prompt: string, placeholders: string[]
       throw new Error("A IA não retornou um conteúdo válido.");
     }
 
-    // Limpeza robusta para extrair JSON mesmo que a IA inclua blocos de código markdown
+    // Limpeza robusta para extrair JSON
     try {
       const cleaned = resultText.replace(/```json|```/g, "").trim();
       return JSON.parse(cleaned);
     } catch (e) {
       console.error("Erro ao parsear JSON da IA:", resultText);
-      throw new Error("A IA retornou um formato de dados inválido. Tente novamente.");
+      throw new Error("A IA retornou um formato de dados inválido.");
     }
   } catch (error: any) {
     console.error("AI Service Error:", error);
