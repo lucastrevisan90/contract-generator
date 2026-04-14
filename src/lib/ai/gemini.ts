@@ -9,8 +9,8 @@ export async function extractContractData(prompt: string, placeholders: string[]
     throw new Error("A chave GOOGLE_GENERATIVE_AI_API_KEY não foi configurada nas variáveis de ambiente.");
   }
 
-  // Utilizamos a versão estável 'v1'
-  const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+  // Utilizamos o modelo estável mais recente para 2026: gemini-2.0-flash
+  const url = `https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
   const systemPrompt = `
     Você é um assistente jurídico especializado em extração de dados de contratos.
