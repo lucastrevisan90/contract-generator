@@ -1,0 +1,44 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #020617; /* Slate 950 */
+  --foreground: #f8fafc; /* Slate 50 */
+  --primary: #06b6d4; /* Cyan 500 */
+  --primary-foreground: #020617;
+  --secondary: #14b8a6; /* Teal 500 */
+  --secondary-foreground: #ffffff;
+  --accent: #0891b2; /* Cyan 600 */
+  --accent-foreground: #ffffff;
+  --card: #0f172a; /* Slate 900 */
+  --border: #1e293b; /* Slate 800 */
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: 'Inter', sans-serif;
+}
+
+@layer components {
+  .btn-primary {
+    @apply px-4 py-2 bg-primary text-primary-foreground font-semibold rounded-lg shadow-lg hover:bg-accent transition-all duration-300 active:scale-95;
+  }
+  
+  .btn-secondary {
+    @apply px-4 py-2 bg-transparent border border-primary text-primary font-semibold rounded-lg hover:bg-primary/10 transition-all duration-300;
+  }
+
+  .card {
+    @apply bg-slate-900/50 border border-slate-800 rounded-xl p-6 backdrop-blur-sm shadow-xl;
+  }
+
+  .sidebar-item {
+    @apply flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-primary hover:bg-primary/5 rounded-lg transition-all active:scale-95;
+  }
+
+  .sidebar-item-active {
+    @apply flex items-center gap-3 px-4 py-3 text-primary bg-primary/10 rounded-lg transition-all font-medium;
+  }
+}
