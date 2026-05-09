@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Crop Utility</title>
+</head>
+
+<body>
+
+    <head>
+        <title>Crop Logo</title>
+    </head>
+
+    <body>
+        <canvas id="canvas"></canvas>
+        <a id="download">Download</a>
+        <script>
+            const img = new Image();
+            img.onload = () => {
+                const canvas = document.getElementById('canvas');
+                const ctx = canvas.getContext('2d');
+
+                // The attached image is 1024x1024 roughly. We need to extract the "8".
+                // We'll set a 512x512 canvas and draw just the top portion (the 8).
+                canvas.width = 512;
+                canvas.height = 512;
+
+                // crop mapping (sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight)
+                // The 8 is in the upper middle
+                ctx.drawImage(img, 256, 40, 512, 512, 0, 0, 512, 512);
+
+                const dataUrl = canvas.toDataURL('image/png');
+                const link = document.getElementById('download');
+                link.href = dataUrl;
+                link.download = 'pwa-512x512.png';
+                link.textContent = 'Click to Download 512x512';
+
+                fetch(dataUrl)
+                    .then(res => res.blob())
+                    .then(blob => {
+                        // This is just a helper for manual download if needed.
+                        console.log('blob size:', blob.size);
+                    });
+            };
+            // Load the local image
+            img.src = "file:///C:/Users/lucas/.gemini/antigravity/brain/9d7d9b55-e3b8-4a99-9c5e-8e4ff1287c70/media__1773255914961.png";
+        </script>
+    </body>
+
+</html>

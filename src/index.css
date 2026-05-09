@@ -1,0 +1,115 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+
+  /* Light Mode - Standard Slate Palette (RGB Channels) */
+  --bg-primary: 248 250 252;
+  /* slate-50 #f8fafc */
+  --bg-secondary: 255 255 255;
+  /* white #ffffff */
+  --bg-tertiary: 241 245 249;
+  /* slate-100 #f1f5f9 */
+
+  --text-primary: 15 23 42;
+  /* slate-900 #0f172a */
+  --text-secondary: 100 116 139;
+  /* slate-500 #64748b */
+  --text-tertiary: 148 163 184;
+  /* slate-400 #94a3b8 */
+  --text-inverted: 255 255 255;
+
+  --border-color: 226 232 240;
+  /* slate-200 #e2e8f0 */
+
+  --accent-color: 37 99 235;
+  /* blue-600 #2563eb */
+  --accent-hover: 29 78 216;
+  /* blue-700 #1d4ed8 */
+}
+
+.dark {
+  /* Dark Mode - Matching Backup (Slate 950) (RGB Channels) */
+  --bg-primary: 2 6 23;
+  /* slate-950 #020617 */
+  --bg-secondary: 15 23 42;
+  /* slate-900 #0f172a */
+  --bg-tertiary: 30 41 59;
+  /* slate-800 #1e293b */
+
+  --text-primary: 248 250 252;
+  /* slate-50 #f8fafc */
+  --text-secondary: 148 163 184;
+  /* slate-400 #94a3b8 */
+  --text-tertiary: 100 116 139;
+  /* slate-500 #64748b */
+  --text-inverted: 0 0 0;
+
+  --border-color: 30 41 59;
+  /* slate-800 #1e293b */
+
+  --accent-color: 59 130 246;
+  /* blue-500 #3b82f6 */
+  --accent-hover: 37 99 235;
+  /* blue-600 #2563eb */
+}
+
+/* ───── Mobile Utilities ───── */
+
+/* Touch-friendly tap targets */
+@layer utilities {
+  .touch-target {
+    min-width: 44px;
+    min-height: 44px;
+  }
+}
+
+/* Smooth scrollbar for all platforms */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgb(var(--border-color));
+  border-radius: 4px;
+}
+
+/* Mobile performance: soften heavy effects */
+@media (max-width: 640px) {
+  .backdrop-blur-sm {
+    -webkit-backdrop-filter: blur(4px) !important;
+    backdrop-filter: blur(4px) !important;
+  }
+
+  .backdrop-blur-md,
+  .backdrop-blur-xl {
+    -webkit-backdrop-filter: blur(8px) !important;
+    backdrop-filter: blur(8px) !important;
+  }
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Safe area padding for notched devices */
+@supports (padding: env(safe-area-inset-bottom)) {
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
